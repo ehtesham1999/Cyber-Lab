@@ -1,5 +1,5 @@
 
-package cyberlab;
+
 import java.util.*; 
 import java.util.Scanner;
 
@@ -7,12 +7,14 @@ import java.util.Scanner;
  *
  * @author ehtesham
  */
-public class RowColTransposition {
+public class rowcol_practise {
     
     static int size = 0 ;
     static int rows = 0;
     static HashMap<Integer, Integer> targets = new HashMap<Integer, Integer>();
     static ArrayList<Integer> keyArray = new ArrayList<Integer>(); 
+    static ArrayList<Integer> decipherArray = new ArrayList<Integer>(); 
+    
     public static void printElements(ArrayList<Integer> alist) 
     { 
         for (int i = 0; i < alist.size(); i++) { 
@@ -26,91 +28,78 @@ public class RowColTransposition {
         String cipher = "";
         int n = key;
         int r;
-        
+
         while(n!=0)
         {
-            
             r = n%10;
             n = n/10;
             keyArray.add(new Integer(r));
+            decipherArray.add(new Integer(r));
             size++;
-            
         }
-        rows = (int)Math.ceil((float)plaintext.length()/(float)size);
+        rows = plaintext.length()/size;
+        if(plaintext.length()%size>0)
+            rows+=1;
         System.out.println("\nNo. of rows = :"+rows);
         System.out.println("No. of cols = :"+size);
-        
+
         System.out.println("\nKey: ");
         Collections.reverse(keyArray); 
+        Collections.reverse(decipherArray); 
+        
         System.out.print("\nElements after reversing: "); 
         printElements(keyArray); 
-        
-        
-        char[][] mat = new char [rows][size];
-        
-        
-       
+
+        char mat[][] = new char[rows][size];
         int k = 0;
-        int flag = 0;
+
         for(int i=0;i<rows;i++)
         {
-            if(flag==1)
-                break;
             for(int j=0;j<size;j++)
             {
                 if(k<plaintext.length())
                     mat[i][j] = plaintext.charAt(k++);
                 else
-                    mat[i][j] = '-';
+                    mat[i][j] = ' ';
             }
-                
         }
-        
-        
-        
-        
-        
-        // Add keys and values (Country, City)
+
+
+        System.out.println();
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<size;j++)
+            {
+                System.out.print(mat[i][j]+" ");                
+            }
+            System.out.println();
+        }
+
+
         for(int i=0;i<size;i++)
         {
             targets.put(keyArray.get(i),new Integer(i));
         
         }
         
-        System.out.println("Hashmap: +");
+        System.out.println("Hashmap: ");
         System.out.println(targets);
         Collections.sort(keyArray); 
         
+
         
-       System.out.println("\nMatrix generated: ");
-         
-        
-        for(int i=0;i<rows;i++)
-        {
-            for(int j=0;j<size;j++)
-            {
-                System.out.print(mat[i][j]+" ");
-            }
-            System.out.println();
-                
-        }
-        
-        //Encryption code
-        
+
         for(int i=0;i<size;i++)
         {
             int curr =  keyArray.get(i);
             int req = targets.get(curr);
             for(int j=0;j<rows;j++)
             {
-                cipher = cipher + mat[j][req]; 
+                cipher+=mat[j][req];
             }
         }
-        
-        
-        
-        
-        
+
+    
         return cipher;
         
     }
@@ -129,14 +118,23 @@ public class RowColTransposition {
         {
             int curr = keyArray.get(i);
             int column = targets.get(curr);
+            System.out.println("column : "+column);
             
             for(int j=0;j<rows;j++)
             {
-                if(cipher.charAt(k)=='-')
-                    k++;
-                else
-                    mat[j][column] = cipher.charAt(k++);
+                mat[j][column] = cipher.charAt(k++);
             }
+        }
+
+
+        System.out.println();
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<size;j++)
+            {
+                System.out.print(mat[i][j]+" ");                
+            }
+            System.out.println();
         }
         
         
@@ -152,7 +150,7 @@ public class RowColTransposition {
         return plaintext;
         
     }
-    
+
     
     
     
@@ -162,6 +160,7 @@ public class RowColTransposition {
         int choice;
         
         Scanner scan = new Scanner(System.in);
+         Scanner reader = new Scanner(System.in);
         scan.useDelimiter("\n");
         String plaintext = "";
         String cipher_text = "";
@@ -176,7 +175,7 @@ public class RowColTransposition {
             System.out.println("4. Decrypt");
             System.out.println("5. Exit");
             System.out.println("\nEnter choice: ");
-            choice = scan.nextInt();
+            choice = reader.nextInt();
         
             
             switch(choice)
@@ -189,17 +188,17 @@ public class RowColTransposition {
                     
                 case 2:
                     System.out.println("Enter Key: ");
-                    key = scan.nextInt();
+                    key = reader.nextInt();
                     
                     break;
                     
                 case 3:
-                    cipher_text = RowColTransposition.encrypt(plaintext,key);
+                    cipher_text = rowcol_practise.encrypt(plaintext,key);
                     System.out.println("\nCipher text : "+ cipher_text);
                     break;
                     
                 case 4:
-                    decipher_text = RowColTransposition.decrypt(cipher_text);
+                    decipher_text = rowcol_practise.decrypt(cipher_text);
                     System.out.println("\nDecrypted text : "+ decipher_text);
                     break;
                   
