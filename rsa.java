@@ -1,7 +1,7 @@
 import java.util.*;
 import java.math.*;
 
-public class rsa {
+public class rsa_practise {
 
 	static int gcd(int a , int b)
 	{
@@ -11,6 +11,15 @@ public class rsa {
 			return gcd(b%a,a);
 	}
 
+
+	static int modInverse(int a, int modm)
+    {
+        a = a % modm;
+        for (int x = 1; x < modm; x++)
+            if ((a * x) % modm == 1)
+                return x;
+        return 1;
+    }
 
 
 
@@ -40,7 +49,7 @@ public class rsa {
 		System.out.println("N : "+n);
 		System.out.println("Phi : "+phi);
 
-		for(e=2;e<phi;e++)
+		for(e=7;e<phi;e++)
 		{
 			if(gcd(e,phi)==1)
 			{
@@ -49,19 +58,7 @@ public class rsa {
 		}
 
 		System.out.println("e: "+e);
-		// d*e = i*phi+1
-		// d = ((i*phi)+1)/e
-
-		for(i=0;i<9;i++)
-		{
-			int x = (i*phi)+1;
-
-			if(x%e==0)
-			{
-				d = x/e;
-				break; 
-			}
-		}
+		d = modInverse(e,phi);
 
 		System.out.println("d: "+d);
 
