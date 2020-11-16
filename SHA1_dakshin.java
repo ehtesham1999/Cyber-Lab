@@ -1,11 +1,7 @@
-
-package SHA1;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-public class SHA1 {
+public class sha1_dakshin {
 	private List<byte[]> inputDataList = new ArrayList<byte[]>();
 
 	// Bitwise rotate a 32-bit number to the left
@@ -15,7 +11,7 @@ public class SHA1 {
 
 	public byte[] digest(byte[] x) {
 
-		// Append padding bits and the length
+		// Append padding bits and the length, as described in the SHA1 standard
 		int[] blks = new int[(((x.length + 8) >> 6) + 1) * 16];
 		int i;
 		for(i = 0; i < x.length; i++) {
@@ -28,11 +24,17 @@ public class SHA1 {
 
 		int[] w = new int[80];
 
-		int a =  1732584193;
-		int b = -271733879;
-		int c = -1732584194;
-		int d =  271733878;
-		int e = -1009589776;
+		// int a =  1732584193;
+		// int b = -271733879;
+		// int c = -1732584194;
+		// int d =  271733878;
+		// int e = -1009589776;
+
+		int a = 0x67452301;
+		int b = 0xEFCDAB89;
+		int c = 0x98BADCFE;
+		int d = 0x10325476;
+		int e = 0xC3D2E1F0;
 
 		for(i = 0; i < blks.length; i += 16) {
 			int olda = a;
@@ -46,10 +48,10 @@ public class SHA1 {
 					( rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1) );
 
 				int t = rol(a, 5) + e + w[j] +
-						( (j < 20) ?  1518500249 + ((b & c) | ((~b) & d))
-								: (j < 40) ?  1859775393 + (b ^ c ^ d)
-										: (j < 60) ? -1894007588 + ((b & c) | (b & d) | (c & d))
-												: -899497514 + (b ^ c ^ d) );
+						( (j < 20) ?  0x5A827999 + ((b & c) | ((~b) & d))
+								: (j < 40) ?  0x6ED9EBA1 + (b ^ c ^ d)
+										: (j < 60) ? -0x8F1BBCDC + ((b & c) | (b & d) | (c & d))
+												: -0xCA62C1D6 + (b ^ c ^ d) );
 				e = d;
 				d = c;
 				c = rol(b, 30);
@@ -92,7 +94,7 @@ public class SHA1 {
 	    return new String(hexChars);
 	}
 	public static void main(String[] args) {
-		SHA1 sha = new SHA1();
+		sha1_dakshin sha = new sha1_dakshin();
 		System.out.println("Enter the string: ");
 		Scanner scanner = new Scanner(System.in);
 		String p = scanner.nextLine();
