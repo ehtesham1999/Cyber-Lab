@@ -1,24 +1,31 @@
 import java.util.Scanner;
 
 
-public class Hill {
-    static  int n;
-    static final int N = 3; 
-    static int [][] keymatrix = new int[10][10];
-    static int [][] resultmatrix = new int[10][10];
-    static int [][] deresultmatrix = new int[10][10];
-    static int [][] inv = new int [N][N];
+public class Hill_practise {
+    static int [][] keymatrix = new int[3][3];
+    static int [][] inverse = new int [3][3];
     
     
     static String cipher_text = "";
     static String decipher_text = "";
+
+
+    public static int determinant(int key[][]) {
+        int det = 0;
+        for (int i = 0; i < 3; i++) {
+            det = det + (key[0][i] * (key[1][(i + 1) % 3] * key[2][(i + 2) % 3]
+                    - key[1][(i + 2) % 3] * key[2][(i + 1) % 3]));
+        }
+        det %= 26;
+        return det;
+    }
     
     static void display(int A[][]) 
     { 
            
-            for (int i = 0; i < N; i++) 
+            for (int i = 0; i < 3; i++) 
             { 
-                    for (int j = 0; j < N; j++) 
+                    for (int j = 0; j < 3; j++) 
                             System.out.print(A[i][j]+ " "); 
                     System.out.println(); 
             } 
@@ -28,23 +35,54 @@ public class Hill {
     static void constructMatrix(String key)
     {
         
-        if(key.length()!=N*N)
-            {System.out.println("Key length must be N*N of block size");
-            return;
-            }
-
         
-        int k=0;
-        for(int i=0;i<N;i++)
+        key = key.substring(0,9);
+        key = key.toUpperCase();
+
+        System.out.println(key);
+        int k = 0;
+        for(int i=0;i<3;i++)
         {
-            for(int j=0;j<N;j++)
-            {
-                char curr = key.charAt(k++);
-                keymatrix[i][j] = curr-'A';
+            for(int j=0;j<3;j++)
+                keymatrix[i][j] = key.charAt(k++)-'A';
+        }
+        display(keymatrix);
+        
+
+    }
+
+    
+    static void constructInverseMatrix(int matrix[][])
+    {
+        
+        
+        //int inverse[][] = new int[3][3];
+        int det = determinant(matrix);
+        if (det % 2 == 0 || det % 13 == 0) {
+            System.out.println("The given key matrix is not invertible");
+            return;
+        }
+        int inv_det = -1;
+        for (int inv = 1; inv < 27; ++inv) {
+            if ((inv * det) % 26 == 1) {
+                inv_det = inv;
             }
         }
 
-        display(keymatrix);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                inverse[i][j] = ((((matrix[(j + 1) % 3][(i + 1) % 3] * matrix[(j + 2) % 3][(i + 2) % 3]) 
+                        - (matrix[(j + 1) % 3][(i + 2) % 3] * matrix[(j + 2) % 3][(i + 1) % 3]))) * inv_det) % 26;
+                inverse[i][j] %= 26;
+                if (inverse[i][j] < 0) {
+                    inverse[i][j] += 26;
+                }
+            }
+        }
+        System.out.println();
+        System.out.println("Inverse matrix: ");
+
+        display(inverse);
         
 
     }
@@ -53,81 +91,119 @@ public class Hill {
     {
         int [][] plainmatrix = new int[10][10];
 
-        for(int i=0;i<curr_text.length();i++)
+        
+        for(int i=0;i<3;i++)
         {
             plainmatrix[i][0] = curr_text.charAt(i)-'A';
         }
-        System.out.println("Plain matrix");
-        for(int i=0;i<curr_text.length();i++)
+
+        System.out.println("plainmatrix: ");
+        for(int i=0;i<3;i++)
         {
             System.out.print(plainmatrix[i][0]+" ");
-            
         }
 
-        System.out.println(" Product matrix: ");
-        int curr = 0 ;
-        for(int i=0;i<N;i++)
+
+
+        int res = 0;
+        System.out.println();
+        for(int i=0;i<3;i++)
         {
-            
-                curr = 0;
-                for(int k=0;k<N;k++)
-                {
-                    curr = curr + plainmatrix[k][0]*keymatrix[i][k];
-                }
-                System.out.println(curr%26);
-                cipher_text = cipher_text + (char)((curr)%26+'A');
-            
+            res = 0;
+            for(int j=0;j<3;j++)
+            {
+                res = res + keymatrix[i][j]*plainmatrix[j][0];
+            }
+            cipher_text = cipher_text + (char)((res%26)+'A');
         }
+
 
         System.out.println("cipher text : "+cipher_text);
-
-
-    
         
     }
+    
     static void encrypt(String plaintext)
     {
-        int nofblocks = plaintext.length()/N;
-        if(plaintext.length()%N>0)
-            nofblocks+=1;
+        
+        int rem = plaintext.length()%3;
+        rem = 3-rem;
 
-        doEncrypt(plaintext);
+        for(int i=0;i<rem;i++)
+        {
+            plaintext = plaintext +  " "; 
+        }
+        //System.out.println(plaintext+" "+plaintext.length());
 
-
-        // for(int i=0;i<nofblocks;i++)
-        // {
-        //     doEncrypt(plaintext.substring(N*i,N*i+N));
-        // }
-
+        int blocks = (int)(plaintext.length()/3);
+        System.out.println("Encrypting blocks : ");
+        for(int i=0;i<blocks;i+=3)
+        {
+            doEncrypt(plaintext.substring(i,i+3));
+            //System.out.println(plaintext.substring(i,i+3));
+        }
 
     }
-    
-    
-    
-        
 
-    
 
-    
     static void doDecrypt(String curr_text)
     {
         int [][] plainmatrix = new int[10][10];
+
+        
+        for(int i=0;i<3;i++)
+        {
+            plainmatrix[i][0] = curr_text.charAt(i)-'A';
+        }
+
+        System.out.println("plainmatrix: ");
+        for(int i=0;i<3;i++)
+        {
+            System.out.print(plainmatrix[i][0]+" ");
+        }
+
+
+
+        int res = 0;
+        System.out.println();
+        for(int i=0;i<3;i++)
+        {
+            res = 0;
+            for(int j=0;j<3;j++)
+            {
+                res = res + inverse[i][j]*plainmatrix[j][0];
+            }
+            decipher_text = decipher_text + (char)((res%26)+'A');
+        }
+
+
+        System.out.println("Decipher text : "+decipher_text);
         
         
-        
-    
     }
     
-    
-    
-    
-    
-    
+    static void decrypt(String cipher)
+    {
         
-    
-    
-    
-    
+        // int rem = cipher.length()%3;
+        // rem = 3-rem;
+
+        // for(int i=0;i<rem;i++)
+        // {
+        //     cipher = cipher +  " "; 
+        // }
+        
+        int blocks = (int)(cipher.length()/3);
+        System.out.println("Decrypting blocks : ");
+        for(int i=0;i<blocks;i+=3)
+        {
+            doDecrypt(cipher.substring(i,i+3));
+            //System.out.println(plaintext.substring(i,i+3));
+        }
+
+
+
+    }
+   
     
     public static void main(String[] args) {
         
@@ -135,7 +211,8 @@ public class Hill {
         int choice;
         
         Scanner scan = new Scanner(System.in);
-        //scan.useDelimiter("\n");
+        Scanner reader = new Scanner(System.in);
+        scan.useDelimiter("\n");
         String plaintext = "";
         String key = "";
         String new_key = "";
@@ -146,9 +223,10 @@ public class Hill {
             System.out.println("2. Enter key text");
             System.out.println("3. Create Matrix");
             System.out.println("4. Encrypt");
+            System.out.println("5. Decrypt");
             System.out.println("6. Exit");
             System.out.println("\nEnter choice: ");
-            choice = scan.nextInt();
+            choice = reader.nextInt();
         
             
             switch(choice)
@@ -157,32 +235,37 @@ public class Hill {
                 case 1:
                     System.out.println("Enter plaintext: ");
                     plaintext = scan.next();
+                    plaintext = plaintext.toUpperCase();
+                    //plaintext = plaintext.replaceAll("\\s", ""); 
+                    // System.out.println(plaintext+" ");
+                    // System.out.print(plaintext.length());
+                    
                     break;
                     
                 case 2:
                     System.out.println("Enter Key: ");
                     key = scan.next();
+                    key = key.replaceAll("\\s", ""); 
                     break;
                     
                 case 3:
-                    Hill.constructMatrix(key);
+                    Hill_practise.constructMatrix(key);
                     break;
                     
                 case 4:
                     
-                    Hill.encrypt(plaintext);
+                    Hill_practise.encrypt(plaintext);
                     System.out.println("\nEncrypted text: "+cipher_text);
                     break;
-                  
-                
-                
-            }
 
-        
-        
+                case 5:
+
+                    Hill_practise.constructInverseMatrix(keymatrix);
+                    Hill_practise.decrypt(cipher_text);
+                    System.out.println("\nDecrypted text: "+decipher_text);
+                    break;
+            }
         }while(choice!=6);
-        
-   
         
     }
     
