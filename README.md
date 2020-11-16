@@ -24,7 +24,7 @@
 15. [MD5 security package](https://github.com/ehtesham1999/Cyber-Lab/blob/master/MD5.java) 
 16. [MD5 Full dakshin](https://github.com/ehtesham1999/Cyber-Lab/blob/master/md5_dakshin.java) 
 17. [SHA1 securtiy package](https://github.com/ehtesham1999/Cyber-Lab/blob/master/SHA1.java) 
-18. [SHA1 Full dakshin](https://github.com/ehtesham1999/Cyber-Lab/blob/master/SHA1.java) 
+18. [SHA1 Full dakshin](https://github.com/ehtesham1999/Cyber-Lab/blob/master/SHA1_dakshin.java) 
 
 19. [Miller Rabin](https://github.com/ehtesham1999/Cyber-Lab/blob/master/Miller_rabin.java) 
 20. [multilicative inverse mod inv](https://github.com/ehtesham1999/Cyber-Lab/blob/master/inverse.java)
