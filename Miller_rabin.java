@@ -1,33 +1,20 @@
-
-// Java program Miller-Rabin primality test 
 import java.io.*; 
 import java.math.*; 
+import java.math.BigInteger; 
 
 class MillerRabin { 
 
-	// Utility function to do modular 
-	// exponentiation. It returns (x^y) % p 
-	static int power(int x, int y, int p) { 
-		
-		int res = 1; // Initialize result 
-		
-		//Update x if it is more than or 
-		// equal to p 
-		x = x % p; 
 
-		while (y > 0) { 
-			
-			// If y is odd, multiply x with result 
-			if ((y & 1) == 1) 
-				res = (res * x) % p; 
-		
-			// y must be even now 
-			y = y >> 1; // y = y/2 
-			x = (x * x) % p; 
-		} 
-		
-		return res; 
-	} 
+	static int power(int a , int b , int p)
+	{
+		BigInteger A, P;
+     
+    	A = BigInteger.valueOf(a);
+    	P = BigInteger.valueOf(p);
+  		int res = (A.pow(b)).mod(P).intValue();
+		return  res;
+
+	}
 	
 	// This function is called for all k trials. 
 	// It returns false if n is composite and 
@@ -106,5 +93,3 @@ class MillerRabin {
 				System.out.print(n + " "); 
 	} 
 } 
-
-/* This code is contributed by Nikita Tiwari.*/
