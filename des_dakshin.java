@@ -1,6 +1,13 @@
-import java.util.*; 
 
-public class des { 
+package cyberlab;
+import java.util.*; 
+/**
+ *
+ * @author ehtesham
+ */
+
+
+public class DESfinal1 { 
 	// DES ALGORITHM - REQUIRED MATRICES
 
 // PERMUTATION PC1
@@ -268,7 +275,7 @@ static String encrypt(String plainText, String key)
 
 	System.out.println("ENCRYPTION KEYS:");
 	for(i=0;i<keys.length;i++)
-		System.out.println("Key "+i+"-> "+keys[i]);
+		System.out.println("Key "+i+"  :  "+keys[i]);
 
 	System.out.println();
 	// initial permutation 
@@ -320,10 +327,10 @@ static String decrypt(String plainText, String key)
 		System.out.print("Enter the plainText: ");
 		String text = ASCIItoHEX(scanner.nextLine()).toUpperCase();
 
-		System.out.print("Enter the key: ");
-		String key = scanner.nextLine().toUpperCase();
-		// String text = "123456ABCD132536"; 
-		// String key = "AABB09182736CCDD"; 
+		//System.out.print("Enter the key: ");
+		//String key = scanner.nextLine().toUpperCase();
+                //String text = "123456ABCD132536"; 
+                String key = "AABB09182736CCDD"; 
 
 		System.out.println("Encryption:\n"); 
 		text = encrypt(text, key); 
@@ -333,6 +340,12 @@ static String decrypt(String plainText, String key)
 		text = decrypt(text, key); 
 		System.out.println( 
 			"\nPlain Text: "
+			+ text.toUpperCase()); 
+                
+                
+                System.out.println( 
+			"\nPlain Text: "
 			+ hexToASCII(text.toUpperCase())); 
+               
 	} 
 } 
