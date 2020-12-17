@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 
-public class Hill_practise {
+class Hill_practise {
     static int [][] keymatrix = new int[3][3];
     static int [][] inverse = new int [3][3];
     
@@ -36,16 +36,14 @@ public class Hill_practise {
     {
         
         
-        key = key.substring(0,9);
         key = key.toUpperCase();
-
-        System.out.println(key);
-        int k = 0;
-        for(int i=0;i<3;i++)
-        {
-            for(int j=0;j<3;j++)
-                keymatrix[i][j] = key.charAt(k++)-'A';
-        }
+        key = key.substring(0,9);
+        int k=0;
+        for (int i = 0; i < 3; i++) 
+            { 
+                    for (int j = 0; j < 3; j++) 
+                        keymatrix[i][j] = key.charAt(k++)-'A';            
+            } 
         display(keymatrix);
         
 
@@ -87,119 +85,77 @@ public class Hill_practise {
 
     }
     
-    static void doEncrypt(String curr_text)
+    static String doEncrypt(String curr_text)
     {
         int [][] plainmatrix = new int[10][10];
-
+        String curr_cipher="";
         
         for(int i=0;i<3;i++)
         {
             plainmatrix[i][0] = curr_text.charAt(i)-'A';
         }
-
-        System.out.println("plainmatrix: ");
-        for(int i=0;i<3;i++)
-        {
-            System.out.print(plainmatrix[i][0]+" ");
-        }
-
-
-
         int res = 0;
-        System.out.println();
         for(int i=0;i<3;i++)
         {
             res = 0;
             for(int j=0;j<3;j++)
             {
-                res = res + keymatrix[i][j]*plainmatrix[j][0];
+                res = res + plainmatrix[j][0]*keymatrix[i][j];
             }
-            cipher_text = cipher_text + (char)((res%26)+'A');
+            curr_cipher = curr_cipher + (char)((res%26)+'A');
         }
-
-
-        System.out.println("cipher text : "+cipher_text);
+        return curr_cipher;
         
     }
     
     static void encrypt(String plaintext)
     {
         
-        int rem = plaintext.length()%3;
-        rem = 3-rem;
-
-        for(int i=0;i<rem;i++)
+        plaintext = plaintext.toUpperCase();
+        System.out.println("debug text: "+plaintext.length());
+        for(int i=0;i<plaintext.length();i+=3)
         {
-            plaintext = plaintext +  " "; 
+            cipher_text+= doEncrypt(plaintext.substring(i,i+3));
         }
-        //System.out.println(plaintext+" "+plaintext.length());
 
-        int blocks = (int)(plaintext.length()/3);
-        System.out.println("Encrypting blocks : ");
-        for(int i=0;i<blocks;i+=3)
-        {
-            doEncrypt(plaintext.substring(i,i+3));
-            //System.out.println(plaintext.substring(i,i+3));
-        }
 
     }
 
 
-    static void doDecrypt(String curr_text)
+    static String doDecrypt(String curr_text)
     {
         int [][] plainmatrix = new int[10][10];
 
-        
+        String curr_cipher = "";
         for(int i=0;i<3;i++)
         {
             plainmatrix[i][0] = curr_text.charAt(i)-'A';
         }
-
-        System.out.println("plainmatrix: ");
-        for(int i=0;i<3;i++)
-        {
-            System.out.print(plainmatrix[i][0]+" ");
-        }
-
-
-
         int res = 0;
-        System.out.println();
         for(int i=0;i<3;i++)
         {
             res = 0;
             for(int j=0;j<3;j++)
             {
-                res = res + inverse[i][j]*plainmatrix[j][0];
+                res = res + plainmatrix[j][0]*inverse[i][j];
             }
-            decipher_text = decipher_text + (char)((res%26)+'A');
+            curr_cipher = curr_cipher + (char)((res%26)+'A');
         }
 
-
-        System.out.println("Decipher text : "+decipher_text);
-        
+        return curr_cipher;
         
     }
     
     static void decrypt(String cipher)
     {
         
-        // int rem = cipher.length()%3;
-        // rem = 3-rem;
+        cipher = cipher.toUpperCase();
+        System.out.println("debug text: "+cipher.length());
 
-        // for(int i=0;i<rem;i++)
-        // {
-        //     cipher = cipher +  " "; 
-        // }
-        
-        int blocks = (int)(cipher.length()/3);
-        System.out.println("Decrypting blocks : ");
-        for(int i=0;i<blocks;i+=3)
+        for(int i=0;i<cipher.length();i+=3)
         {
-            doDecrypt(cipher.substring(i,i+3));
-            //System.out.println(plaintext.substring(i,i+3));
+            decipher_text+= doDecrypt(cipher.substring(i,i+3));
         }
-
 
 
     }
@@ -235,10 +191,7 @@ public class Hill_practise {
                 case 1:
                     System.out.println("Enter plaintext: ");
                     plaintext = scan.next();
-                    plaintext = plaintext.toUpperCase();
-                    //plaintext = plaintext.replaceAll("\\s", ""); 
-                    // System.out.println(plaintext+" ");
-                    // System.out.print(plaintext.length());
+                    plaintext = plaintext.replaceAll("\\s", "");
                     
                     break;
                     
